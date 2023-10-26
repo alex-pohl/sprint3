@@ -2,9 +2,9 @@
 
 Para iniciar cada ejercicio:
 
-npm install typescript --save-dev \n
-npx tsc --init \n
-npm i --save-dev @types/node \n
+npm install typescript --save-dev  
+npx tsc --init  
+npm i --save-dev @types/node  
 
 Comprobar el funcionamiento:
 
