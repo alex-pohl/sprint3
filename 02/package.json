@@ -1,0 +1,19 @@
+{
+  "name": "02",
+  "version": "1.0.0",
+  "description": "",
+  "main": "baby-steps.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.8.9",
+    "jest": "^29.7.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@types/babel__core": "^7.20.3"
+  }
+}
