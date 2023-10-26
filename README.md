@@ -2,14 +2,14 @@
 
 Para iniciar cada ejercicio:
 
-npm install typescript --save-dev
-npx tsc --init
-npm i --save-dev @types/node
+npm install typescript --save-dev \n
+npx tsc --init \n
+npm i --save-dev @types/node \n
 
 Comprobar el funcionamiento:
 
-learnyounode run 'file.js'
-learnyounode verify 'file.js'
+learnyounode run 'file.js' \n
+learnyounode verify 'file.js' \n
 
 Testing:
 
