@@ -3,7 +3,6 @@
 # Para iniciar cada ejercicio:
 
 npm install typescript --save-dev <br>
-npx tsc --init  <br>
 npm i --save-dev @types/node  <br>
 
 # Comprobar el funcionamiento:
