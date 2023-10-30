@@ -7,8 +7,8 @@ npm i --save-dev @types/node  <br>
 
 # Comprobar el funcionamiento:
 
-learnyounode run 'file.js' \n
-learnyounode verify 'file.js' \n
+learnyounode run 'file.js' <br>
+learnyounode verify 'file.js' <br>
 
 # Testing:
 npm i --save-dev jest <br>
