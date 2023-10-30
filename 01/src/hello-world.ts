@@ -4,3 +4,4 @@ function function01(): void {
 }
 
 module.exports = {function01};
+function01();

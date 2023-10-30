@@ -1,45 +1,55 @@
-const http = require('http'); // incluído en node
-const port = process.argv[2] // definimos el puerto ( primer argumento pasado al cli)
+const http = require('http');
+const url = require('url');
 
-function parseTime(time: Date) { // Creamod una función para cada retorno
-    return { // retornamos un objeto JSON con los datos
-        hora : time.getHours(), // asignamos las horas
-        minutos : time.getMinutes(), // "" minutos
-        segundos : time.getSeconds() // "" segundos
-    }
+const port = process.argv[2];
+
+function parseTime(time: Date) {
+    return {
+        hour: time.getHours(),
+        minute: time.getMinutes(),
+        second: time.getSeconds(),
+    };
 }
 
-function unixTime(time: Date){ // lo mismo para el unixtime (total ms desde nosecuando)
-    return{
-        unixtime : time.getTime() // formato para recibir el tiempo en unix
-    }
+function unixTime(time: Date) {
+    return {
+        unixtime: time.getTime(),
+    };
 }
-const rutas: { [key: string]: (parsedUrl: any) => any } = { // más problemas de tipos, por más que intento no comprendo que falla
-    '/api/parsetime': (parsedUrl) => {
-        
-        const isoValue = parsedUrl.get('iso');
-        if (isoValue !== null){
+
+const rutas : { [key: string]: (parsedUrl: any) => string } = {
+    '/api/parsetime': (parsedUrl: any) => {
+        const isoValue = parsedUrl.searchParams.get('iso');
+        if (isoValue !== null) {
             const time = new Date(isoValue);
-            return parseTime(time);
+            return JSON.stringify(parseTime(time));
         }
-
+        return 'Invalid ISO date format';
     },
-    '/api/unixtime': (parsedUrl) => {
-        const isoValue = parsedUrl.get('iso');
-        if (isoValue !== null){
+    '/api/unixtime': (parsedUrl: any) => {
+        const isoValue = parsedUrl.searchParams.get('iso');
+        if (isoValue !== null) {
             const time = new Date(isoValue);
-            return unixTime(time);
+            return JSON.stringify(unixTime(time));
         }
-    }
- }
+        return 'Invalid ISO date format';
+    },
+};
 
- const server = http.createServer((req: any, res: any) => { // tipos http.IncomingMessage y parecidos no dejan de dar errores.
-    const parsedUrl = new URL(req.url, `http://localhost:${port}`);
+const server = http.createServer((req: any, res: any) => {
+    const parsedUrl = new url.URL(req.url || '', `http://localhost:${port}`);
     const ruta = rutas[parsedUrl.pathname];
 
-    res.writeHead(200, {'Content-Type' : 'application/JSON'});
-    res.end(ruta(parsedUrl));
- });
+    res.writeHead(200, { 'Content-Type': 'application/JSON' });
+    if (ruta) {
+        const result = ruta(parsedUrl);
+        res.end(result);
+    } else {
+        res.end('Invalid route');
+    }
+});
 
+server.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
 
-server.listen(port);

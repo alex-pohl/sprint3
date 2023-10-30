@@ -1,38 +1,49 @@
 "use strict";
-const http = require('http'); // incluído en node
-const port = process.argv[2]; // definimos el puerto ( primer argumento pasado al cli)
+const http = require('http');
+const url = require('url');
+const port = process.argv[2];
 function parseTime(time) {
     return {
-        hora: time.getHours(), // asignamos las horas
-        minutos: time.getMinutes(), // "" minutos
-        segundos: time.getSeconds() // "" segundos
+        hour: time.getHours(),
+        minute: time.getMinutes(),
+        second: time.getSeconds(),
     };
 }
 function unixTime(time) {
     return {
-        unixtime: time.getTime() // formato para recibir el tiempo en unix
+        unixtime: time.getTime(),
     };
 }
 const rutas = {
     '/api/parsetime': (parsedUrl) => {
-        const isoValue = parsedUrl.get('iso');
+        const isoValue = parsedUrl.searchParams.get('iso');
         if (isoValue !== null) {
             const time = new Date(isoValue);
-            return parseTime(time);
+            return JSON.stringify(parseTime(time));
         }
+        return 'Invalid ISO date format';
     },
     '/api/unixtime': (parsedUrl) => {
-        const isoValue = parsedUrl.get('iso');
+        const isoValue = parsedUrl.searchParams.get('iso');
         if (isoValue !== null) {
             const time = new Date(isoValue);
-            return unixTime(time);
+            return JSON.stringify(unixTime(time));
         }
-    }
+        return 'Invalid ISO date format';
+    },
 };
 const server = http.createServer((req, res) => {
-    const parsedUrl = new URL(req.url, `http://localhost:${port}`);
+    const parsedUrl = new url.URL(req.url || '', `http://localhost:${port}`);
     const ruta = rutas[parsedUrl.pathname];
     res.writeHead(200, { 'Content-Type': 'application/JSON' });
-    res.end(ruta(parsedUrl));
+    if (ruta) {
+        const result = ruta(parsedUrl);
+        res.end(result);
+    }
+    else {
+        res.end('Invalid route');
+    }
 });
-server.listen(port);
+server.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
