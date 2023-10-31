@@ -15,3 +15,4 @@ let list = fs.readdir(file, (err, files) => {
         });
     }
 });
+// $ node filtered-ls.js "C:/Users/Alex Pohl/Desktop/sprint3/05" txt
